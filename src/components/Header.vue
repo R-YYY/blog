@@ -12,7 +12,7 @@
                  placeholder="请输入你想搜索的内容..."
                  v-model="searchContent"
                  @keyup.enter="searchBlog">
-          <i id="search" class="el-icon-search"></i>
+          <i id="search" class="el-icon-search" @click="searchBlog"></i>
         </div>
       </div>
       <div id="right">
@@ -22,17 +22,32 @@
       </div>
     </div>
     <div class="placeholder"></div>
+    <el-dialog title="搜索结果"
+               :visible.sync="dialogVisible"
+               width="60%">
+      <div v-if="blogList.length !== 0">
+        <div v-for="item in blogList">
+          <Blog :blog="item"></Blog>
+          <hr class="line">
+        </div>
+      </div>
+      <el-empty v-else description="没有搜索结果"></el-empty>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import Blog from "@/components/Blog";
 export default {
   name: "Header",
+  components: {Blog},
   props:["select"],
   data(){
     return{
       searchVisible:true,
       searchContent:"",
+      blogList:[],
+      dialogVisible:false,
     }
   },
   methods:{
@@ -49,7 +64,22 @@ export default {
     },
 
     searchBlog(){
-
+      this.blogList = []
+      this.$axios({
+        url:"/blog/get/search",
+        method:"get",
+        params:{
+          searchString:this.searchContent
+        }
+      }).then(res=>{
+        console.log(res.data)
+        for (let item of res.data) {
+          this.blogList.push(item)
+        }
+        this.dialogVisible = true
+      }).catch(err=>{
+        console.log(err)
+      })
     }
   },
   mounted() {
