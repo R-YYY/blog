@@ -40,7 +40,7 @@ export default {
       this.$router.push({
         name:'other',
         params:{
-          id:this.blog.userId
+          id:this.blog.blog.userid
         }
       })
     },
