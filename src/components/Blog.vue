@@ -2,7 +2,7 @@
   <div class="blogCard">
     <div class="user">
       <img class="img" @click="otherInfo" src="../assets/user.png" alt="">
-      <div class="userName" @click="otherInfo">{{blog.userName}}</div>
+      <div class="userName" @click="otherInfo">{{blog.blog.username}}</div>
     </div>
     <div class="title">{{blog.blog.title}}</div>
     <div class="intro">
