@@ -14,7 +14,7 @@
     <div class="oper">
       <el-input placeholder="文明发言，从你我做起 ~" style="width: 470px" v-model="input"></el-input>
       <el-button @click="send">发送评论</el-button>
-      <el-button style="width: 100px" @click="favorite">
+      <el-button v-show="show" style="width: 100px" @click="favorite">
         <i class="el-icon-star-off"></i>&nbsp;&nbsp;收藏
       </el-button>
     </div>
@@ -35,6 +35,7 @@ export default {
   data(){
     return{
       input:"",
+      show:true,
     }
   },
   methods:{
@@ -53,7 +54,27 @@ export default {
     },
 
     favorite(){
-
+      let data = JSON.stringify({
+        "id":0,
+        "userid":Number(window.sessionStorage.getItem("userId")),
+        "blogid":this.blog.blog.id
+      })
+      this.$axios({
+        url:"/favorite/add",
+        method:"post",
+        data:data,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+      }).then(res=>{
+        console.log(res.data)
+        if(res.data.message === "收藏成功"){
+          this.$message.success("收藏成功")
+          this.show = false
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
     },
 
     send(){

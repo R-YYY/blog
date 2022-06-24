@@ -13,7 +13,7 @@
             <div style="height: 110px">{{info.introduce}}</div>
           </el-form-item>
         </el-form>
-        <el-button @click="follow"><i class="el-icon-plus"></i>&nbsp;&nbsp;关注</el-button>
+        <el-button v-show="show" @click="follow"><i class="el-icon-plus"></i>&nbsp;&nbsp;关注</el-button>
       </div>
       <div class="blog">
         <div v-for="item in blogList">
@@ -43,6 +43,7 @@ export default {
         introduce:"",
         hobby:"",
       },
+      show:true,
     }
   },
   methods:{
@@ -61,6 +62,10 @@ export default {
         },
       }).then(res=>{
         console.log(res.data)
+        if(res.data.message === "关注成功"){
+          this.$message.success("关注成功")
+          this.show = false
+        }
       }).catch(err=>{
         console.log(err)
       })
