@@ -28,7 +28,7 @@
         </div>
       </div>
       <div v-if="select==='follow'" class="follow">
-        <div v-for="item in followBlogList">
+        <div v-for="item in favoriteBlogList">
           <Blog :blog="item"></Blog>
           <hr class="line">
         </div>
@@ -92,7 +92,7 @@ export default {
         introduce:"",
         hobby:"",
       },
-      followBlogList:[],
+      favoriteBlogList:[],
       myBlogList:[],
       dialogVisible:false,
       rules:{
@@ -197,7 +197,7 @@ export default {
     })
 
     this.$axios({
-      url:"/blog/get/follow",
+      url:"/blog/get/favorite",
       method:"get",
       params:{
         userId:window.sessionStorage.getItem("userId")
@@ -205,7 +205,7 @@ export default {
     }).then(res=>{
       console.log(res.data)
       for (let item of res.data) {
-        this.followBlogList.push(item)
+        this.favoriteBlogList.push(item)
       }
     }).catch(err=>{
       console.log(err)

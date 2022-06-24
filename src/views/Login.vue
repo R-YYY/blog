@@ -82,12 +82,7 @@ export default {
         }
         this.$message.success("登录成功")
         window.sessionStorage.setItem("userId",res.data.id)
-        window.sessionStorage.setItem("phone",res.data.phone)
-        window.sessionStorage.setItem("job",res.data.job)
-        window.sessionStorage.setItem("hobby",res.data.hobby)
-        window.sessionStorage.setItem("birthday",res.data.birthday)
-        window.sessionStorage.setItem("name",res.data.name)
-        window.sessionStorage.setItem("introduce",res.data.introduce)
+        window.sessionStorage.setItem("userName",res.data.name)
         this.$router.push({name:"homepage"})
       })
     },

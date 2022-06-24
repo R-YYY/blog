@@ -12,11 +12,8 @@
     </div>
     <div class="content">{{blog.blog.content}}</div>
     <div class="oper">
-      <el-input placeholder="文明发言，从你我做起 ~" style="width: 470px"></el-input>
-      <el-button>发送评论</el-button>
-      <el-button style="width: 100px" @click="follow">
-        <i class="el-icon-plus"></i>&nbsp;&nbsp;关注
-      </el-button>
+      <el-input placeholder="文明发言，从你我做起 ~" style="width: 470px" v-model="input"></el-input>
+      <el-button @click="send">发送评论</el-button>
       <el-button style="width: 100px" @click="favorite">
         <i class="el-icon-star-off"></i>&nbsp;&nbsp;收藏
       </el-button>
@@ -35,18 +32,60 @@
 export default {
   name: "Blog",
   props:["blog"],
+  data(){
+    return{
+      input:"",
+    }
+  },
   methods:{
     otherInfo(){
-      this.$router.push({
-        name:'other',
-        params:{
-          id:this.blog.blog.userid
-        }
-      })
+      if(this.blog.blog.userid === Number(window.sessionStorage.getItem("userId"))){
+        this.$router.push({name:'person',})
+      }
+      else{
+        this.$router.push({
+          name:'other',
+          params:{
+            id:this.blog.blog.userid
+          }
+        })
+      }
     },
 
-    follow(){
+    favorite(){
 
+    },
+
+    send(){
+      if(this.input.trim() === ""){
+        this.$message.error("请输入有效评论")
+        return
+      }
+      let data = JSON.stringify({
+        "id": 0,
+        "userid": Number(window.sessionStorage.getItem("userId")),
+        "blogid": this.blog.blog.id,
+        "content": this.input
+      })
+      this.$axios({
+        url:"/comment/add",
+        method:"post",
+        data:data,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+      }).then((res=>{
+        console.log(res.data)
+        if(res.data.message === "评论成功"){
+          this.$message.success("评论成功")
+          this.blog.commentList.push({
+            "userName":window.sessionStorage.getItem("userName"),
+            "content":this.input
+          })
+        }
+      })).catch(err=>{
+        console.log(err)
+      })
     }
   }
 }

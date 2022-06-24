@@ -13,7 +13,7 @@
             <div style="height: 110px">{{info.introduce}}</div>
           </el-form-item>
         </el-form>
-        <el-button @click="dialogVisible=true"><i class="el-icon-plus"></i>&nbsp;&nbsp;关注</el-button>
+        <el-button @click="follow"><i class="el-icon-plus"></i>&nbsp;&nbsp;关注</el-button>
       </div>
       <div class="blog">
         <div v-for="item in blogList">
@@ -43,6 +43,27 @@ export default {
         introduce:"",
         hobby:"",
       },
+    }
+  },
+  methods:{
+    follow(){
+      let data = JSON.stringify({
+        "id":0,
+        "userid":Number(window.sessionStorage.getItem("userId")),
+        "followid":this.info.id,
+      })
+      this.$axios({
+        url:"/follow/add",
+        method:"post",
+        data:data,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+      }).then(res=>{
+        console.log(res.data)
+      }).catch(err=>{
+        console.log(err)
+      })
     }
   },
   mounted() {
