@@ -4,13 +4,17 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import Axios from 'axios'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 
+Vue.prototype.$axios = axios;
+axios.defaults.baseURL="/api";
+
 new Vue({
+  axios,
   router,
   store,
   render: h => h(App)

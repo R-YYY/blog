@@ -49,7 +49,7 @@
           <el-input v-model="newInfo.phone"></el-input>
         </el-form-item>
         <el-form-item label="生日" prop="birthday">
-          <el-input v-model="newInfo.birthday"></el-input>
+          <el-date-picker style="width: 100%" v-model="newInfo.birthday"></el-date-picker>
         </el-form-item>
         <el-form-item label="工作" prop="job">
           <el-input v-model="newInfo.job"></el-input>
@@ -58,7 +58,7 @@
           <el-input v-model="newInfo.hobby"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="introduce">
-          <el-input type="textarea" v-model="newInfo.introduce"></el-input>
+          <el-input type="textarea" :rows="3" v-model="newInfo.introduce"></el-input>
         </el-form-item>
       </el-form>
       <el-button type="primary" plain @click="change">确定</el-button>
@@ -77,12 +77,12 @@ export default {
     return{
       select:"person",
       oldInfo:{
-        name:"我的名字",
-        phone:"10086",
-        birthday:"2022-7-1",
-        job:"学生",
-        introduce:"我的介绍我的介绍我的介绍我的介绍我的介绍我的介绍我的介绍我的介绍",
-        hobby:"",
+        name:window.sessionStorage.getItem("name"),
+        phone:window.sessionStorage.getItem("phone"),
+        birthday:window.sessionStorage.getItem("birthday"),
+        job:window.sessionStorage.getItem("job"),
+        introduce:window.sessionStorage.getItem("introduce"),
+        hobby:window.sessionStorage.getItem("hobby"),
       },
       newInfo:{
         name:"",
@@ -107,6 +107,12 @@ export default {
         birthday: [
           { required: true, message: '请输入生日', trigger: 'blur' },
         ],
+        hobby: [
+          { required: true, message: '请输入爱好', trigger: 'blur' },
+        ],
+        introduce: [
+          { required: true, message: '请输入简介', trigger: 'blur' },
+        ],
       }
     }
   },
@@ -123,7 +129,32 @@ export default {
     },
 
     change(){
-
+      let data = JSON.stringify({
+        "id":Number(window.sessionStorage.getItem("userId")),
+        "name": this.newInfo.name,
+        "phone": this.newInfo.phone,
+        "birthday": this.newInfo.birthday,
+        "job": this.newInfo.job,
+        "hobby": this.newInfo.hobby,
+        "introduce": this.newInfo.introduce
+      })
+      this.$axios({
+        url:"/user/updateinfo",
+        method:"post",
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data:data,
+      }).then(res=>{
+        console.log(res)
+        if(res.data.message === "更改成功"){
+          this.$message.success("修改成功")
+          location.reload()
+          this.$router.go(0)
+        }
+      }).catch(err=>{
+        console.log(err)
+      })
     },
 
     reset(){
@@ -146,6 +177,10 @@ export default {
     this.newInfo.hobby = this.oldInfo.hobby
     this.newInfo.introduce = this.oldInfo.introduce
 
+    //TODO 加载个人信息
+
+
+    //TODO 加载博客列表
     for (let i = 0; i < 10; i++) {
       this.blogList.push({
         id:"11",
@@ -228,11 +263,11 @@ export default {
 .personC:hover,
 .followC:hover,
 .myBlogC:hover{
-  background: #f8f8f8;
+  background: #ebebeb;
 }
 
 .selected{
-  background: #f8f8f8;
+  background: #ebebeb;
 }
 
 .line{
@@ -261,6 +296,7 @@ export default {
 }
 
 .form{
+  text-align: left;
   padding-left: 30px;
   padding-right: 70px;
   padding-bottom: 20px;

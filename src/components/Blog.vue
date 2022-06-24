@@ -1,27 +1,31 @@
 <template>
   <div class="blogCard">
     <div class="user">
-      <img class="img" src="../assets/user.png" alt="">
-      <div class="userName">{{blog.userName}}</div>
+      <img class="img" @click="otherInfo" src="../assets/user.png" alt="">
+      <div class="userName" @click="otherInfo">{{blog.userName}}</div>
     </div>
-    <div class="title">{{blog.title}}</div>
+    <div class="title">{{blog.blog.title}}</div>
     <div class="intro">
-      <div>时间：{{blog.time}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-      <div>天气：{{blog.weather}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
-      <div>心情：{{blog.mood}}</div>
+      <div>时间：{{blog.blog.time}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+      <div>天气：{{blog.blog.weather}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+      <div>心情：{{blog.blog.mood}}</div>
     </div>
-    <div class="content">{{blog.content}}</div>
+    <div class="content">{{blog.blog.content}}</div>
     <div class="oper">
       <el-input placeholder="文明发言，从你我做起 ~" style="width: 470px"></el-input>
       <el-button>发送评论</el-button>
-      <el-button style="width: 100px"><i class="el-icon-plus"></i>&nbsp;&nbsp;关注</el-button>
-      <el-button style="width: 100px"><i class="el-icon-star-off"></i>&nbsp;&nbsp;收藏</el-button>
+      <el-button style="width: 100px" @click="follow">
+        <i class="el-icon-plus"></i>&nbsp;&nbsp;关注
+      </el-button>
+      <el-button style="width: 100px" @click="favorite">
+        <i class="el-icon-star-off"></i>&nbsp;&nbsp;收藏
+      </el-button>
     </div>
     <div class="commentArea">
       <div v-for="item in blog.commentList" class="comment">
         <img class="commentImg" src="../assets/user2.png" alt="">
         <div style="white-space: nowrap;"><b>{{item.userName}}：</b></div>
-        <div class="commentContent">{{item.comment}}</div>
+        <div class="commentContent">{{item.content}}</div>
       </div>
     </div>
   </div>
@@ -30,7 +34,21 @@
 <script>
 export default {
   name: "Blog",
-  props:["blog"]
+  props:["blog"],
+  methods:{
+    otherInfo(){
+      this.$router.push({
+        name:'other',
+        params:{
+          id:this.blog.userId
+        }
+      })
+    },
+
+    follow(){
+
+    }
+  }
 }
 </script>
 
@@ -42,11 +60,13 @@ export default {
 
 .user{
   display: flex;
+  width: auto;
 }
 
 .img{
   width: 50px;
   height: 50px;
+  cursor: pointer;
 }
 
 .intro{
@@ -61,6 +81,7 @@ export default {
   line-height: 50px;
   font-weight: bold;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .title{
